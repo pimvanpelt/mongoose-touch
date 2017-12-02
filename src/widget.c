@@ -99,11 +99,22 @@ struct widget_t *widget_create_from_json(const char *json) {
     if (json_scanf(json, strlen(json), "{mqtt:%Q}", &mqtt) != 1) {
       LOG(LL_WARN, ("Widget '%s' is of type MQTT_BUTTON but does not have attribute 'mqtt'", widget->name));
     } else {
+      // Find length of all messages
+      uint16_t len=0;
+      char *p=NULL;
       while ((h = json_next_elem(json, strlen(json), h, ".mqtt", &idx, &val)) != NULL) {
         LOG(LL_INFO, ("[%d]: [%.*s]", idx, val.len, val.ptr));
-        if (val.len>0 && val.ptr) {
-        }
+        len+=val.len;
       }
+      LOG(LL_INFO, ("%d elements in the list, %d total length", idx, len));
+      p=malloc(len+1+idx);
+      memset(p, 0, len+1+idx);
+      while ((h = json_next_elem(json, strlen(json), h, ".mqtt", &idx, &val)) != NULL) {
+        strncat(p, val.ptr, val.len);
+        strncat(p, "\001", len+1+idx);
+      }
+      LOG(LL_INFO, ("String is '%.*s'", len+idx, p));
+      widget->user_data=p;
       if(mqtt) free(mqtt);
     }
   }
