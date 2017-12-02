@@ -1,5 +1,5 @@
 {
-  "name": "Heli",
+  "name": "Sticky",
   "widgets": [
     {
       "name": "back",
@@ -19,7 +19,7 @@
       "h": 56,
       "label": "On",
       "type": 1,
-      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 On" ]
+      "mqtt": [ "/s/cmnd/5C:CF:7F:20:29:6E/Power On" ]
     },
     {
       "name": "heli_led_off",
@@ -29,7 +29,7 @@
       "h": 56,
       "label": "Off",
       "type": 1,
-      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 Off" ]
+      "mqtt": [ "/s/cmnd/5C:CF:7F:20:29:6E/Power Off" ]
     },
     {
       "name": "heli_led_toggle",
@@ -39,7 +39,7 @@
       "h": 56,
       "label": "Toggle",
       "type": 1,
-      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 Toggle", "test", "foo", "bar" ]
+      "mqtt": [ "/s/cmnd/5C:CF:7F:20:29:6E/Power Toggle" ]
     }
   ]
 }

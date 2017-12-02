@@ -39,13 +39,15 @@ config_schema:
   - ["app.backlight_pin", "i", {title: "Backlight pin"}]
   - ["app.backlight_pin", 22]
   - ["app.inactivity_timeout", "i", {title: "Inactivity timeout in seconds"}]
-  - ["app.inactivity_timeout", 10]
+  - ["app.inactivity_timeout", 300]
   - ["app.battery_calibration", i, {title: "Battery ADC value at 4000mV"}]
   - ["app.battery_calibration", 2360]
   - ["spi.enable", true]
   - ["spi.cs1_gpio", -1]
   - ["spi.cs2_gpio", -1]
   - ["stmpe610.cs_index", 0]
+  - ["mqtt.enable", true]
+  - ["mqtt.server", "chbtl01.paphosting.net:1883"]
 
 conds:
   - when: mos.platform == "esp32"
@@ -76,6 +78,7 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
   - origin: https://github.com/mongoose-os-libs/rpc-uart
   - origin: https://github.com/mongoose-os-libs/prometheus-metrics
+  - origin: https://github.com/mongoose-os-libs/mqtt
   - origin: https://github.com/mongoose-os-libs/pwm
   - origin: https://github.com/mongoose-os-libs/adc
   - origin: https://github.com/mongoose-os-libs/spi

@@ -1,4 +1,5 @@
 #include "mgos.h"
+#include "mgos_mqtt.h"
 #include "mongoose-touch.h"
 
 extern GFXfont FreeSerifBold9pt7b;
@@ -106,6 +107,46 @@ static void widget_default_loadscreen(struct widget_t *w, void *ev_data) {
   (void) ev_data;
 }
 
+
+static void widget_default_mqtt_send(struct widget_t *w, void *ev_data) {
+  struct json_token val;
+  int idx=0;
+
+  if (!w)
+    return;
+  if (!w->user_data)
+    return;
+//  LOG(LL_DEBUG, ("MQTT string: '%s'", (char *)w->user_data));
+  // Traverse Array
+  for (idx = 0; json_scanf_array_elem(w->user_data, strlen(w->user_data), "", idx, &val) > 0; idx++) {
+    char *t=NULL, *m=NULL;
+    uint16_t t_len=0, m_len=0;
+    char *topic;
+
+    LOG(LL_DEBUG, ("Index %d, token [%.*s]", idx, val.len, val.ptr));
+    t=(char*)val.ptr;
+    m=strstr(val.ptr, " ");
+    if (m-val.ptr <= val.len) {
+      t_len=m-t;
+      m++;
+      m_len=val.len-t_len-1;
+    } else {
+      t_len=val.len;
+      m_len=0;
+      m=NULL;
+    }
+    if ((topic=malloc(t_len+1))) {
+      memcpy(topic, t, t_len);
+      topic[t_len]=0;
+      LOG(LL_INFO, ("Sending topic='%s', message='%.*s'", topic, m_len, m));
+      mgos_mqtt_pub(topic, m, m_len, 0, false);
+      free(topic);
+      widget_network_send();
+    }
+  }
+  (void) ev_data;
+}
+
 void widget_default_ev(int ev, struct widget_t *w, void *ev_data) {
   char evname[15];
 
@@ -124,10 +165,14 @@ void widget_default_ev(int ev, struct widget_t *w, void *ev_data) {
       widget_default_draw(w, ILI9341_GREEN);
       break;
     case EV_WIDGET_TOUCH_UP:
-      if (w->type == WIDGET_TYPE_LOADSCREEN)
+      if (w->type == WIDGET_TYPE_LOADSCREEN) {
         widget_default_loadscreen(w, ev_data);
-      else
-        widget_default_draw(w, ILI9341_GREEN);
+        break;
+      }
+      if (w->type == WIDGET_TYPE_MQTT_BUTTON) {
+        widget_default_mqtt_send(w, ev_data);
+      }
+      widget_default_draw(w, ILI9341_GREEN);
       break;
     case EV_WIDGET_TOUCH_DOWN:
       widget_default_draw(w, ILI9341_RED);

@@ -2,7 +2,7 @@
 #include <time.h>
 
 #include "mgos.h"
-#include "mgos_pwm.h"
+#include "mgos_mqtt.h"
 #include "mongoose-touch.h"
 #include "fonts/FreeSerifBold9pt7b.h"
 #include "fonts/FreeMonoBold9pt7b.h"
@@ -34,11 +34,9 @@ static void touch_handler(struct mgos_stmpe610_event_data *ed) {
   widget = screen_widget_find_by_xy(s_screen, ed->x, ed->y);
 
   if (ed->direction==TOUCH_DOWN) {
-    widget_network_recv();
     if (widget && widget->handler)
       widget->handler(EV_WIDGET_TOUCH_DOWN, widget, ed);
   } else {
-    widget_network_send();
     if (widget && widget->handler)
       widget->handler(EV_WIDGET_TOUCH_UP, widget, ed);
   }
@@ -64,9 +62,18 @@ void tft_demo(void)
   LOG(LL_INFO, ("Screen '%s' has %d widgets", s_screen->name, screen_get_num_widgets(s_screen)));
 }
 
+static void mqtt_recv_cb(struct mg_connection *nc, const char *topic, int topic_len, const char *msg, int msg_len, void *user_data) {
+  widget_network_recv();
+  LOG(LL_INFO, ("topic='%.*s' msg='%.*s'", topic_len, topic, msg_len, msg));
+  (void) nc;
+  (void) user_data;
+}
+
+
 enum mgos_app_init_result mgos_app_init(void)
 {
   backlight_init();
+  mgos_mqtt_sub("/s/#", mqtt_recv_cb, NULL);
 
   tft_demo();
 

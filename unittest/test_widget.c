@@ -72,6 +72,45 @@ int test_widget() {
   return 0;
 }
 
+static void widget_default_mqtt_send(struct widget_t *w, void *ev_data) {
+  struct json_token val;
+  int idx=0;
+
+  if (!w)
+    return;
+  if (!w->user_data)
+    return;
+  LOG(LL_INFO, ("MQTT string: '%s'", (char *)w->user_data));
+  // Traverse Array
+  for (idx = 0; json_scanf_array_elem(w->user_data, strlen(w->user_data), "", idx, &val) > 0; idx++) {
+    char *t=NULL, *m=NULL;
+    uint16_t t_len=0, m_len=0;
+    char *topic;
+
+    LOG(LL_DEBUG, ("Index %d, token [%.*s]", idx, val.len, val.ptr));
+    t=(char*)val.ptr;
+    m=strstr(val.ptr, " ");
+    if (m-val.ptr <= val.len) {
+      LOG(LL_INFO, ("Space found"));
+      t_len=m-t;
+      m++;
+      m_len=val.len-t_len-1;
+    } else {
+      t_len=val.len;
+      m_len=0;
+      m=NULL;
+    }
+    if ((topic=malloc(t_len+1))) {
+      memcpy(topic, t, t_len);
+      topic[t_len]=0;
+      LOG(LL_INFO, ("Sending topic='%s', message='%.*s'", topic, m_len, m));
+      free(topic);
+    }
+  }
+  (void) ev_data;
+}
+
+
 int test_widget_mqtt() {
   struct widget_t *w;
 
@@ -81,5 +120,6 @@ int test_widget_mqtt() {
   ASSERT(w, "widget_create_from_file()");
   ASSERT(w->x == 240, "'x' field is invalid");
   ASSERT(w->type == WIDGET_TYPE_MQTT_BUTTON, "'type' field is not WIDGET_TYPE_MQTT_BUTTON");
+  widget_default_mqtt_send(w, NULL);
   return 0;
 }

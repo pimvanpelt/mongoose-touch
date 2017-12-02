@@ -6,5 +6,5 @@
   "h": 56,
   "label": "On",
   "type": 1,
-  "mqtt": [ "/topic1 Hello", "/topic2 World" ]
+  "mqtt": [ "/topic1 Hello", "/t2 Wereld", "/topic3", "", "/top4" ]
 }
