@@ -21,6 +21,7 @@ extern int assert_count;
 
 
 int test_widget(void);
+int test_widget_mqtt(void);
 int test_screen(void);
 
 #endif // __TEST_H

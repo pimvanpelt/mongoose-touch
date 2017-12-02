@@ -1,0 +1,10 @@
+{
+  "name": "heli_led_on",
+  "x": 240,
+  "y": 36,
+  "w": 64,
+  "h": 56,
+  "label": "On",
+  "type": 1,
+  "mqtt": [ "/topic1 Hello", "/topic2 World" ]
+}

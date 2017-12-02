@@ -5,6 +5,6 @@
   "w": 48,
   "h": 48,
   "label": "One",
-  "type": 0
+  "type": 0,
   "img": "/some/file.ext"
 }

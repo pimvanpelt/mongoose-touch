@@ -1,5 +1,5 @@
 {
-  "name": "One",
+  "name": "Heli",
   "widgets": [
     {
       "name": "back",
@@ -12,13 +12,34 @@
       "screen": "/screen_main.json"
     },
     {
-      "name": "one",
-      "x": 256,
+      "name": "heli_led_on",
+      "x": 240,
       "y": 36,
-      "w": 48,
-      "h": 48,
-      "label": "One",
-      "type": 0
+      "w": 64,
+      "h": 56,
+      "label": "On",
+      "type": 1,
+      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 On" ]
+    },
+    {
+      "name": "heli_led_off",
+      "x": 240,
+      "y": 108,
+      "w": 64,
+      "h": 56,
+      "label": "Off",
+      "type": 1,
+      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 Off" ]
+    },
+    {
+      "name": "heli_led_toggle",
+      "x": 240,
+      "y": 180,
+      "w": 64,
+      "h": 56,
+      "label": "Toggle",
+      "type": 1,
+      "mqtt": [ "/s/cmnd/60:01:94:80:85:01/power3 Toggle", "test", "foo", "bar" ]
     }
   ]
 }

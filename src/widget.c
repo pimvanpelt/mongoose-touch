@@ -81,12 +81,30 @@ struct widget_t *widget_create_from_json(const char *json) {
   widget->type=type;
   widget->label=label;
   widget->img=img;
+
+  // Load widget-specific attributes
   if (type == WIDGET_TYPE_LOADSCREEN) {
     if (json_scanf(json, strlen(json), "{screen:%Q}", &screen) != 1) {
       LOG(LL_WARN, ("Widget '%s' is of type LOADSCREEN but does not have attribute 'screen'", widget->name));
     } else {
       if (widget->user_data) free(widget->user_data);
       widget->user_data = screen;
+    }
+  } else if (type == WIDGET_TYPE_MQTT_BUTTON) {
+    void *h = NULL;
+    char *mqtt = NULL;
+    struct json_token val;
+    int idx;
+
+    if (json_scanf(json, strlen(json), "{mqtt:%Q}", &mqtt) != 1) {
+      LOG(LL_WARN, ("Widget '%s' is of type MQTT_BUTTON but does not have attribute 'mqtt'", widget->name));
+    } else {
+      while ((h = json_next_elem(json, strlen(json), h, ".mqtt", &idx, &val)) != NULL) {
+        LOG(LL_INFO, ("[%d]: [%.*s]", idx, val.len, val.ptr));
+        if (val.len>0 && val.ptr) {
+        }
+      }
+      if(mqtt) free(mqtt);
     }
   }
 

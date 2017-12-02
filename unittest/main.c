@@ -5,6 +5,7 @@ int assert_count=0;
 
 int main() {
   test_widget();
+  test_widget_mqtt();
   test_screen();
 
   if (test_failures) {

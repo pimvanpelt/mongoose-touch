@@ -78,6 +78,7 @@ void screen_add_default_widgets(struct screen_t *screen) {
 
 static void widget_default_loadscreen(struct widget_t *w, void *ev_data) {
   struct screen_t *new_screen;
+  char *new_screen_fn;
 
   if (!w)
     return;
@@ -86,8 +87,12 @@ static void widget_default_loadscreen(struct widget_t *w, void *ev_data) {
     return;
   }
 
+  new_screen_fn=strdup(w->user_data);
 
-  new_screen = screen_create_from_file(w->user_data, widget_default_ev, NULL);
+  screen_destroy(&s_screen);
+  new_screen = screen_create_from_file(new_screen_fn, widget_default_ev, NULL);
+  free(new_screen_fn);
+
   if (!new_screen) {
     LOG(LL_ERROR, ("Could not load screen"));
     return;
@@ -95,7 +100,6 @@ static void widget_default_loadscreen(struct widget_t *w, void *ev_data) {
   screen_add_default_widgets(new_screen);
 
   LOG(LL_INFO, ("Navigating to new screen '%s' which has %d widgets", new_screen->name, screen_get_num_widgets(new_screen)));
-  screen_destroy(&s_screen);
   s_screen = new_screen;
   screen_widget_broadcast(s_screen, EV_WIDGET_DRAW, NULL);
 
@@ -109,7 +113,7 @@ void widget_default_ev(int ev, struct widget_t *w, void *ev_data) {
     return;
   widget_ev_to_str(ev, evname, sizeof(evname)-1);
 
-  LOG(LL_INFO, ("Event %s received for widget '%s'", evname, w->name));
+  LOG(LL_DEBUG, ("Event %s received for widget '%s'", evname, w->name));
 
   switch(ev) {
     case EV_WIDGET_CREATE:

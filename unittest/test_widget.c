@@ -71,3 +71,15 @@ int test_widget() {
 
   return 0;
 }
+
+int test_widget_mqtt() {
+  struct widget_t *w;
+
+  char *fn = "data/TestWidget-MQTT.json";
+  LOG(LL_INFO, ("widget_create_from_file(%s)", fn));
+  w = widget_create_from_file(fn);
+  ASSERT(w, "widget_create_from_file()");
+  ASSERT(w->x == 240, "'x' field is invalid");
+  ASSERT(w->type == WIDGET_TYPE_MQTT_BUTTON, "'type' field is not WIDGET_TYPE_MQTT_BUTTON");
+  return 0;
+}
