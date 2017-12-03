@@ -2,5 +2,5 @@
 
 ## Introduction
 
-For basic introduction, see [huzzah32-featherwing](https://github.com/mongoose-os-apps/huzzah-featherwing)
+For basic introduction, see [huzzah32-featherwing](https://github.com/mongoose-os-apps/huzzah32-featherwing) in the Mongoose OS Application list.
 
