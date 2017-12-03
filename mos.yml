@@ -45,7 +45,8 @@ config_schema:
   - ["spi.enable", true]
   - ["spi.cs1_gpio", -1]
   - ["spi.cs2_gpio", -1]
-  - ["stmpe610.cs_index", 0]
+  - ["ili9341.cs_index", 0]
+  - ["stmpe610.cs_index", 1]
   - ["mqtt.enable", true]
   - ["mqtt.server", "chbtl01.paphosting.net:1883"]
 
@@ -59,8 +60,8 @@ conds:
         - ["spi.mosi_gpio", 18]
         - ["spi.miso_gpio", 19]
         - ["spi.sclk_gpio", 5]
-        - ["spi.cs0_gpio", 32]
-        - ["ili9341.cs_pin", 15]
+        - ["spi.cs0_gpio", 15] # ILI9341
+        - ["spi.cs1_gpio", 32] # STMPE610
         - ["ili9341.dc_pin", 33]
         - ["stmpe610.irq_pin", 23]
   - when: mos.platform == "esp8266"
@@ -82,8 +83,8 @@ libs:
   - origin: https://github.com/mongoose-os-libs/pwm
   - origin: https://github.com/mongoose-os-libs/adc
   - origin: https://github.com/mongoose-os-libs/spi
-  - origin: https://github.com/pimvanpelt/ili9341-spi
-  - origin: https://github.com/pimvanpelt/stmpe610-spi
+  - origin: https://github.com/mongoose-os-libs/ili9341-spi
+  - origin: https://github.com/mongoose-os-libs/stmpe610-spi
 
 # Used by the mos tool to catch mos binaries incompatible with this file format
 manifest_version: 2017-05-18
